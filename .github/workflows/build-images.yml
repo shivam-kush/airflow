@@ -21,6 +21,9 @@ jobs:
           # Build Docker image
           docker build -t airflow-image:${{ github.sha }} .
 
+      - name: Display Docker image
+        run: docker images
+
       - name: valint install
         id: valint_install
         uses: scribe-security/action-installer@master
