@@ -43,7 +43,7 @@ jobs:
        
       - name: valint verify
         id: valint_verify
-        uses: scribe-security/action-verify@master
+        uses: scribe-security/action-installer@master
         with:
           target: 'airflow-image:${{ github.sha }}'
           scribe-enable: true
