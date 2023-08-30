@@ -37,10 +37,21 @@ jobs:
           scribe-enable: true
           scribe-client-id: ${{ secrets.clientid }}
           scribe-client-secret: ${{ secrets.clientsecret }}
-
+          
+      - name: Generate cyclonedx json SBOM-airflow
+        uses: scribe-security/action-bom@master
+        with:
+          type: docker
+          target: 'airflow-image:${{ github.sha }}'
+          format: json
+          force: true
+          scribe-enable: true
+          scribe-client-id: ${{ secrets.clientid }}
+          scribe-client-secret: ${{ secrets.clientsecret }}
+       
       - name: valint verify
         id: valint_verify
-        uses: scribe-security/action-installer@master
+        uses: scribe-security/action-verify@master
         with:
           target: 'busybox:latest'
           scribe-enable: true
