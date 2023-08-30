@@ -285,3 +285,26 @@ jobs:
       - name: "Fix ownership"
         run: breeze ci fix-ownership
         if: always()
+        
+      - name: valint install
+        id: valint_install
+        uses: scribe-security/action-installer@master
+        with:
+          tools: valint
+          
+      - name: Generate cyclonedx json SBOM
+        uses: scribe-security/action-bom@master
+        with:
+          target: 'busybox:latest'
+          scribe-enable: true
+          scribe-client-id: ${{ secrets.clientid }}
+          scribe-client-secret: ${{ secrets.clientsecret }}
+
+      - name: valint verify
+        id: valint_verify
+        uses: scribe-security/action-installer@master
+        with:
+          target: 'busybox:latest'
+          scribe-enable: true
+          scribe-client-id: ${{ secrets.clientid }}
+          scribe-client-secret: ${{ secrets.clientsecret }}
