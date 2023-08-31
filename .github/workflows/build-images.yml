@@ -15,7 +15,7 @@ jobs:
         uses: scribe-security/action-bom@master
         with:
           type: git
-          target: 'airflow'
+          target: .
           format: json
           product-key: git-SBOM
           product-version: ${{ github.run_id }}
