@@ -15,10 +15,9 @@ jobs:
         uses: scribe-security/action-bom@master
         with:
           type: git
-          target: .
+          target: 'https://github.com/shivam-kush/airflow.git'
           format: json
-          force: true
-          product-key: git-SBOM
+          product-key: airflow-git-SBOM
           product-version: ${{ github.run_id }}
           scribe-enable: true
           scribe-client-id: ${{ secrets.clientid }}
@@ -44,7 +43,7 @@ jobs:
           target: 'airflow-image:${{ github.sha }}'
           format: json
           force: true
-          product-key: image-SBOM
+          product-key: airflow-image-SBOM
           product-version: ${{ github.run_id }}
           scribe-enable: true
           scribe-client-id: ${{ secrets.clientid }}
