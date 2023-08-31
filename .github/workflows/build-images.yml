@@ -11,6 +11,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Generate cyclonedx json SBOM for git repo
+        uses: scribe-security/action-bom@master
+        with:
+          type: git
+          target: 'airflow'
+          format: json
+          product-key: git-SBOM
+          product-version: ${{ github.run_id }}
+          scribe-enable: true
+          scribe-client-id: ${{ secrets.clientid }}
+          scribe-client-secret: ${{ secrets.clientsecret }}
+
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
@@ -23,29 +35,17 @@ jobs:
 
       - name: Display Docker image
         run: docker images
-
-      - name: valint install
-        id: valint_install
-        uses: scribe-security/action-installer@master
-        with:
-          tools: valint
           
-      - name: Generate cyclonedx json SBOM
+      - name: Generate cyclonedx json SBOM for docker image
         uses: scribe-security/action-bom@master
         with:
           type: docker
           target: 'airflow-image:${{ github.sha }}'
           format: json
           force: true
+          product-key: image-SBOM
+          product-version: ${{ github.run_id }}
           scribe-enable: true
           scribe-client-id: ${{ secrets.clientid }}
           scribe-client-secret: ${{ secrets.clientsecret }}
-       
-      - name: valint verify
-        id: valint_verify
-        uses: scribe-security/action-installer@master
-        with:
-          target: 'airflow-image:${{ github.sha }}'
-          scribe-enable: true
-          scribe-client-id: ${{ secrets.clientid }}
-          scribe-client-secret: ${{ secrets.clientsecret }}
+      
