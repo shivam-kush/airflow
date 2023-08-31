@@ -35,19 +35,10 @@ jobs:
 
       - name: Build images
         run: |
-          # Build Docker image
           docker build -t airflow-image:${{ github.sha }} .
 
       - name: Display Docker image
         run: docker images
-
-      - name: Log in to GitHub Container Registry
-        run: echo "${{ secrets.GHST }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-
-      - name: Push Docker image to GHCR
-        run: |
-          docker tag airflow-image:${{ github.sha }} ghcr.io/${{ github.repository_owner }}/airflow-image:${{ github.sha }}
-          docker push ghcr.io/${{ github.repository_owner }}/airflow-image:${{ github.sha }}
 
       - name: Generate cyclonedx json SBOM for docker image
         uses: scribe-security/action-bom@master
@@ -62,7 +53,11 @@ jobs:
           scribe-client-id: ${{ secrets.clientid }}
           scribe-client-secret: ${{ secrets.clientsecret }}
 
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ github.ref }}
+      - name: Log in to Docker Hub
+        run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Tag Docker image
+        run: docker tag airflow-image:${{ github.sha }} shivamkush/airflow:latest
+
+      - name: Push Docker image to Docker Hub
+        run: docker push shivamkush/airflow:latest
